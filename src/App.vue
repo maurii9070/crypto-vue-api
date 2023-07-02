@@ -1,5 +1,5 @@
 <script setup>
-	import { onMounted, ref, reactive } from 'vue';
+	import { onMounted, ref, reactive, computed } from 'vue';
 	import Alerta from './components/Alerta.vue';
 
 	const monedas = ref([
@@ -49,6 +49,10 @@
 
 		cotizacion.value = data.DISPLAY[criptomoneda][moneda];
 	};
+
+	const mostrarResultado = computed(() => {
+		return Object.values(cotizacion.value).length > 0;
+	});
 </script>
 
 <template>
@@ -100,7 +104,10 @@
 				/>
 			</form>
 
-			<div class="contenedor-resultado">
+			<div
+				class="contenedor-resultado"
+				v-if="mostrarResultado"
+			>
 				<h2>Cotizacion</h2>
 
 				<div class="resultado">
@@ -111,6 +118,18 @@
 					<div>
 						<p>
 							El precio es de: <span>{{ cotizacion.PRICE }}</span>
+						</p>
+						<p>
+							El precio mas alto del dia: <span>{{ cotizacion.HIGHDAY }}</span>
+						</p>
+						<p>
+							El precio mas bajo del dia: <span>{{ cotizacion.LOWDAY }}</span>
+						</p>
+						<p>
+							Variacion en las ultimas 24hs: <span>{{ cotizacion.CHANGEPCT24HOUR }}%</span>
+						</p>
+						<p>
+							Ultima actualizacion: <span>{{ cotizacion.LASTUPDATE }}</span>
 						</p>
 					</div>
 				</div>
