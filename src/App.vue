@@ -99,6 +99,22 @@
 					value="Cotizar"
 				/>
 			</form>
+
+			<div class="contenedor-resultado">
+				<h2>Cotizacion</h2>
+
+				<div class="resultado">
+					<img
+						:src="'https://cryptocompare.com/' + cotizacion.IMAGEURL"
+						alt="imagen crypto"
+					/>
+					<div>
+						<p>
+							El precio es de: <span>{{ cotizacion.PRICE }}</span>
+						</p>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 </template>
