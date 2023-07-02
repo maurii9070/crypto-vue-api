@@ -1,33 +1,17 @@
 <script setup>
-	import { onMounted, ref, reactive, computed } from 'vue';
+	import { ref, reactive } from 'vue';
 	import Alerta from './components/Alerta.vue';
 	import Spinner from './components/Spinner.vue';
 
-	const monedas = ref([
-		{ codigo: 'USD', texto: 'Dolar de Estados Unidos' },
-		{ codigo: 'MXN', texto: 'Peso Mexicano' },
-		{ codigo: 'EUR', texto: 'Euro' },
-		{ codigo: 'GBP', texto: 'Libra Esterlina' },
-	]);
+	import useCripto from './composables/useCripto.js';
 
-	const criptomonedas = ref([]);
+	const { monedas, criptomonedas, cargando, cotizacion, obtenerCotizacion, mostrarResultado } = useCripto();
+
 	const error = ref('');
 
 	const cotizar = reactive({
 		moneda: '',
 		criptomoneda: '',
-	});
-
-	const cotizacion = ref({});
-	const cargando = ref(false);
-
-	onMounted(() => {
-		const url = 'https://min-api.cryptocompare.com/data/top/mktcapfull?limit=20&tsym=USD';
-		fetch(url)
-			.then(respuesta => respuesta.json())
-			.then(data => {
-				criptomonedas.value = data.Data;
-			});
 	});
 
 	const cortizarCripto = () => {
@@ -39,31 +23,8 @@
 
 		error.value = '';
 
-		obtenerCotizacion();
+		obtenerCotizacion(cotizar);
 	};
-
-	const obtenerCotizacion = async () => {
-		cargando.value = true;
-		cotizacion.value = {};
-
-		try {
-			const { moneda, criptomoneda } = cotizar;
-			const url = `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${criptomoneda}&tsyms=${moneda}`;
-
-			const respuesta = await fetch(url);
-			const data = await respuesta.json();
-
-			cotizacion.value = data.DISPLAY[criptomoneda][moneda];
-		} catch (error) {
-			console.log(error);
-		} finally {
-			cargando.value = false;
-		}
-	};
-
-	const mostrarResultado = computed(() => {
-		return Object.values(cotizacion.value).length > 0;
-	});
 </script>
 
 <template>
